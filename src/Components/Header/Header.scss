@@ -1,0 +1,17 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    background-color: #332934;
+    align-items: center;
+    color: white;
+    padding: 10px 100px;
+
+    .nav_links {
+        display: flex;
+        gap: 10px;
+
+        & a {
+            color: white;
+        }
+    }
+}
