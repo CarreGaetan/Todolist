@@ -20,9 +20,9 @@ function FinishedTasks({
     }
 
     return (
-        <ul>
+        <ul className='finished-tasklist'>
             {tasks.map((task) => (
-                <li key={task.id} onClick={() => setSelectedTask(task)}>
+                <li className='task-item' key={task.id} onClick={() => setSelectedTask(task)}>
                     {editId === task.id ? (
                         <>
                             <input

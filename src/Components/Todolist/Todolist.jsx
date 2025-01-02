@@ -85,14 +85,13 @@ function Todolist() {
 
     return (
         <div>
-            <h1>To do list</h1>
             <div className="container">
                 <div className="list_container">
                     <AddTask newTodo={newTodo} setNewTodo={setNewTodo} addTask={addTask} />
                     <div className='list'>
                     <TaskList
-                        tasks={todos.filter((todo) => !todo.checked) // Tâches non catégorisées
-                        }
+                        tasks={todos.filter((todo) => !todo.checked)} // Tâches non terminées
+                        allTasks={todos} // Toutes les tâches pour réordonner proprement
                         setTasks={setTodos}
                         toggleCheckbox={toggleCheckbox}
                         editMode={editMode}
@@ -103,6 +102,7 @@ function Todolist() {
                         saveTask={saveTask}
                         setSelectedTask={setSelectedTask}
                     />
+
                         <button 
                             className='showCheckedTaskButton'
                             onClick={() => setCheckedTask(!checkedTask)}>

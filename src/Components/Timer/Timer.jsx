@@ -1,5 +1,8 @@
 import React, { useState, useRef } from "react";
 import './Timer.scss';
+import audio from '../../../src/audio.mp3'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlay, faPause,faRepeat, faMusic, faVolumeXmark} from '@fortawesome/free-solid-svg-icons';
 
 function Timer() {
     const [timeLeft, setTimeLeft] = useState(25 * 60); // 25 minutes en secondes
@@ -52,16 +55,23 @@ function Timer() {
         }
     };
 
-    const toggleAudio = () => {
+    const toggleAudio = async () => {
         if (audioRef.current) {
-            if (isPlayingAudio) {
-                audioRef.current.pause();
-            } else {
-                audioRef.current.play();
+            try {
+                if (isPlayingAudio) {
+                    audioRef.current.pause();
+                } else {
+                    await audioRef.current.play();
+                }
+                setIsPlayingAudio(!isPlayingAudio);
+            } catch (error) {
+                console.error("Error playing audio:", error);
             }
-            setIsPlayingAudio(!isPlayingAudio);
+        } else {
+            console.error("audioRef is not initialized");
         }
     };
+    
 
     const changeVolume = (e) => {
         const newVolume = parseFloat(e.target.value);
@@ -84,13 +94,23 @@ function Timer() {
             <h2>Pomodoro Timer</h2>
             <p>{formatTime(timeLeft)}</p>
             <div className="buttons">
+                {isRunning ? 
+                <button onClick={pauseTimer}>
+                <FontAwesomeIcon icon={faPause} size="lg" />
+            </button>
+                :
                 <button onClick={startTimer} disabled={isRunning}>
-                    Start
+                    <FontAwesomeIcon icon={faPlay} size="lg" />
                 </button>
-                <button onClick={pauseTimer}>Pause</button>
-                <button onClick={resetTimer}>Reset</button>
+                }
+                <button onClick={resetTimer}>
+                    <FontAwesomeIcon icon={faRepeat} size="lg" />
+                </button>
                 <button onClick={toggleAudio}>
-                    {isPlayingAudio ? "Pause Music" : "Play Music"}
+                    {isPlayingAudio ? 
+                    <FontAwesomeIcon icon={faVolumeXmark} size="lg" /> 
+                    : 
+                    <FontAwesomeIcon icon={faMusic} size="lg" />}
                 </button>
             </div>
             <div className="volume-control">
@@ -105,7 +125,16 @@ function Timer() {
                     onChange={changeVolume}
                 />
             </div>
-            <audio ref={audioRef} src="/audio.mp3" loop></audio> {/* Utilisation de la route absolue pour accéder au fichier */}
+            <audio
+                ref={audioRef}
+                src={audio}
+                type="audio/mpeg"
+                onError={(e) => {
+                    console.error("Audio error:", e.target.error);
+                }}
+                onLoadedData={() => console.log("Audio loaded successfully")}
+                loop
+            ></audio> {/* Utilisation de la route absolue pour accéder au fichier */}
         </div>
     );
 }
